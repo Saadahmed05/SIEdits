@@ -1,4 +1,4 @@
-# Contributing to SceneWright
+# Contributing to SIEdits
 
 Thanks for helping! This project values small, verifiable changes.
 
@@ -25,7 +25,7 @@ FFmpeg with libx264 must be installed for render tests. For browser tests:
 - **Explicit errors.** Don't swallow exceptions; surface them with a code and field paths.
 - **Licenses.** New runtime dependencies must be OSI-licensed and compatible with
   Apache-2.0 (MIT, BSD, Apache, ISC, MPL-2.0 for unmodified files). Run `npm run licenses`
-  and update `research/LICENSE_AND_DEPENDENCY_AUDIT.md`. No GPL/AGPL code in-process; no
+  and record the result in the dependency audit. No GPL/AGPL code in-process; no
   committed assets without a clear license; no model weights in the repository.
 - **Tests.** Add or update tests for behaviour changes. Changes to the project format need
   schema tests, a docs update in `docs/PROJECT_FORMAT.md`, `npm run schema`, and — if

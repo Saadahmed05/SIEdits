@@ -1,7 +1,7 @@
 {
-  "name": "scenewright",
+  "name": "siedits",
   "version": "0.1.0",
-  "description": "Open-source, AI-assisted, editable motion graphics: brief \u2192 validated scene graph \u2192 preview \u2192 MP4.",
+  "description": "Agent-driven video editor for talking-head creators, built on the SceneWright engine.",
   "scripts": {
     "dev": "node scripts/dev.mjs",
     "dev:server": "tsx watch src/server/index.ts",

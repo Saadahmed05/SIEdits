@@ -1,4 +1,4 @@
-# Extending SceneWright
+# Extending the SceneWright engine
 
 Every extension point is a typed registry. TypeScript's exhaustiveness checks (`{ [T in …] }`
 mapped types) tell you exactly which places still need code when you add a new kind of thing.

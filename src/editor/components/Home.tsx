@@ -192,7 +192,7 @@ export function Home({ health, onOpen }: { health: Health | null; onOpen: (p: Pr
     <div className="home">
       <header className="home-header">
         <div className="brand-mark">
-          <span className="logo-dot" /> SceneWright
+          <span className="logo-dot" /> SIEdits
         </div>
         <span className="muted small">Open-source motion graphics · brief → editable scenes → MP4</span>
         <div className="spacer" />

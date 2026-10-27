@@ -32,7 +32,7 @@ const app = createApp({
 
 const version = await ffmpegVersion();
 serve({ fetch: app.fetch, hostname: config.host, port: config.port }, (info) => {
-  console.log(`SceneWright API listening on http://${config.host}:${info.port}`);
+  console.log(`SIEdits API listening on http://${config.host}:${info.port}`);
   console.log(`  data:    ${config.dataDir}`);
   console.log(`  ffmpeg:  ${version ?? 'NOT FOUND — rendering is disabled until FFmpeg is installed'}`);
   console.log(`  planners: ${providers.map((p) => `${p.id}${p.isConfigured() ? '' : ' (not configured)'}`).join(', ')}`);

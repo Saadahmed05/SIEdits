@@ -3,7 +3,7 @@ import { TRANSITION_TYPES } from '../project/schema';
 import type { PlanRequest } from './types';
 
 /** System prompt shared by LLM planners. Kept stable so it can be prompt-cached. */
-export const PLANNER_SYSTEM_PROMPT = `You are the storyboard planner for SceneWright, a motion graphics tool.
+export const PLANNER_SYSTEM_PROMPT = `You are the storyboard planner for SIEdits, a motion graphics and video editing tool.
 You turn a short creative brief into a storyboard: a JSON object that a deterministic engine
 renders with fixed layouts and animations. You write the copy and choose the structure; you do
 not design layouts, write code, or reference files or URLs to fetch.

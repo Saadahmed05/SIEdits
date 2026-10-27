@@ -24,7 +24,7 @@ async function request<T>(method: string, url: string, body?: unknown, headers: 
       body: body === undefined ? undefined : body instanceof Blob ? body : JSON.stringify(body),
     });
   } catch (err) {
-    throw new ApiError(0, `Cannot reach the SceneWright server: ${(err as Error).message}`);
+    throw new ApiError(0, `Cannot reach the SIEdits server: ${(err as Error).message}`);
   }
   if (res.status === 204) return undefined as T;
   const data = (await res.json().catch(() => ({}))) as { error?: string; issues?: ValidationIssue[]; code?: string };
