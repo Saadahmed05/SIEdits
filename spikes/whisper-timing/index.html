@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spike B · Whisper word timing</title>
+    <link rel="stylesheet" href="../shared/spike.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Spike B · Whisper word timing</h1>
+      <p class="muted">
+        Transcribe in the browser with Whisper (transformers.js) and score word start times against a reference
+        transcript. Gate: word timing within ±100 ms. Pass <code>?src=</code> and <code>?ref=</code> to preload files.
+      </p>
+      <section class="controls">
+        <label>Audio or video <input id="file" type="file" accept="audio/*,video/*" /></label>
+        <label>Reference words JSON <input id="ref" type="file" accept=".json,application/json" /></label>
+        <label
+          >Model
+          <select id="model">
+            <option value="onnx-community/whisper-base.en_timestamped">whisper-base.en (timestamped)</option>
+            <option value="onnx-community/whisper-tiny.en_timestamped">whisper-tiny.en (timestamped)</option>
+            <option value="onnx-community/whisper-small_timestamped">whisper-small (timestamped)</option>
+          </select>
+        </label>
+        <label
+          >Device
+          <select id="device">
+            <option value="webgpu">WebGPU</option>
+            <option value="wasm">WASM (CPU)</option>
+          </select>
+        </label>
+        <label>Length (s, 0 = all) <input id="length" type="number" value="0" min="0" step="10" /></label>
+      </section>
+      <section class="actions">
+        <button id="run">Transcribe and score</button>
+        <span id="status" class="muted"></span>
+      </section>
+      <progress id="progress" max="1" value="0"></progress>
+      <section class="results">
+        <pre id="result">No run yet.</pre>
+        <div>
+          <a id="download" hidden>Download words JSON</a>
+          <table id="sample"></table>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
