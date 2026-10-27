@@ -25,11 +25,11 @@ through an MCP connector and the user can always undo or tweak what it did.
 Each spike answers one go/no-go question before product code is written. See
 [spikes/README.md](spikes/README.md) for how to run them and what passing means.
 
-| Spike | Question | Gate |
-|---|---|---|
-| [A: browser export](spikes/browser-export/) | Can Chrome/Edge decode footage, draw captions and graphics, and export a 1080×1920 MP4 with AAC audio? | Export ≤ 1× real time |
-| [B: Whisper word timing](spikes/whisper-timing/) | Are Whisper WebGPU word timestamps good enough for word-level captions and text-based cuts? | Word timing within ±100 ms |
-| [C: remote MCP](spikes/mcp-server/) | Can an AI client drive edits through a remote MCP server with typed ops and a preview? | One full agent edit round-trip |
+| Spike | Question | Gate | First result (one laptop) |
+|---|---|---|---|
+| [A: browser export](spikes/browser-export/) | Can Chrome/Edge decode footage, draw captions and graphics, and export a 1080×1920 MP4 with AAC audio? | Export ≤ 1× real time | Valid H.264 + AAC output; 0.91× once, then 2.4–2.7× under sustained load |
+| [B: Whisper word timing](spikes/whisper-timing/) | Are Whisper WebGPU word timestamps good enough for word-level captions and text-based cuts? | Word timing within ±100 ms | Fails raw (31%); constant +145 ms lag, 89–92% after correcting; slow on this laptop |
+| [C: remote MCP](spikes/mcp-server/) | Can an AI client drive edits through a remote MCP server with typed ops and a preview? | One full agent edit round-trip | Passes locally with the SDK client; OAuth, deploy, Claude/ChatGPT connection still open |
 
 ## Quick start (SceneWright editor)
 
