@@ -1,0 +1,10 @@
+SceneWright
+Copyright 2026 SceneWright contributors
+
+This product includes fonts from the Inter, Space Grotesk and Playfair Display
+projects, distributed via @fontsource under the SIL Open Font License 1.1.
+
+The @napi-rs/canvas native binary bundles Skia, FreeType, libjpeg-turbo, libpng,
+ICU and other components; see node_modules/@napi-rs/canvas-*/sbom.cdx.json.
+This software is based in part on the work of the Independent JPEG Group.
+Portions of this software are copyright (c) The FreeType Project (www.freetype.org).

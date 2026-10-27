@@ -1,0 +1,4872 @@
+{
+  "title": "SceneWright project (v1)",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "format": {
+      "type": "string",
+      "const": "scenewright.project"
+    },
+    "version": {
+      "type": "number",
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{1,64}$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+    },
+    "settings": {
+      "type": "object",
+      "properties": {
+        "width": {
+          "type": "integer",
+          "minimum": 16,
+          "maximum": 3840
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 16,
+          "maximum": 3840
+        },
+        "fps": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 60
+        }
+      },
+      "required": [
+        "width",
+        "height",
+        "fps"
+      ],
+      "additionalProperties": false
+    },
+    "brand": {
+      "type": "object",
+      "properties": {
+        "primary": {
+          "type": "string",
+          "pattern": "^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$"
+        },
+        "secondary": {
+          "type": "string",
+          "pattern": "^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$"
+        },
+        "accent": {
+          "type": "string",
+          "pattern": "^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$"
+        },
+        "background": {
+          "type": "string",
+          "pattern": "^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$"
+        },
+        "text": {
+          "type": "string",
+          "pattern": "^#(?:[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$"
+        },
+        "headingFont": {
+          "default": "Inter",
+          "type": "string",
+          "enum": [
+            "Inter",
+            "Space Grotesk",
+            "Playfair Display"
+          ]
+        },
+        "bodyFont": {
+          "default": "Inter",
+          "type": "string",
+          "enum": [
+            "Inter",
+            "Space Grotesk",
+            "Playfair Display"
+          ]
+        }
+      },
+      "required": [
+        "primary",
+        "secondary",
+        "accent",
+        "background",
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "assets": {
+      "default": [],
+      "maxItems": 100,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,64}$"
+          },
+          "kind": {
+            "type": "string",
+            "const": "image"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "file": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,64}\\.(png|jpg|jpeg|webp)$"
+          },
+          "mimeType": {
+            "type": "string",
+            "enum": [
+              "image/png",
+              "image/jpeg",
+              "image/webp"
+            ]
+          },
+          "width": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "height": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "name",
+          "file",
+          "mimeType",
+          "width",
+          "height"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "scenes": {
+      "minItems": 1,
+      "maxItems": 50,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,64}$"
+          },
+          "name": {
+            "default": "Scene",
+            "type": "string",
+            "maxLength": 80
+          },
+          "duration": {
+            "type": "number",
+            "minimum": 0.1,
+            "maximum": 120
+          },
+          "background": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "solid"
+                  },
+                  "color": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "type",
+                  "color"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "linear-gradient"
+                  },
+                  "angle": {
+                    "default": 135,
+                    "type": "number",
+                    "minimum": -360,
+                    "maximum": 360
+                  },
+                  "stops": {
+                    "minItems": 2,
+                    "maxItems": 6,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "offset": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1
+                        },
+                        "color": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "offset",
+                        "color"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "rotateSpeed": {
+                    "default": 0,
+                    "type": "number",
+                    "minimum": -360,
+                    "maximum": 360
+                  },
+                  "vignette": {
+                    "default": 0,
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "required": [
+                  "type",
+                  "stops"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "radial-gradient"
+                  },
+                  "cx": {
+                    "default": 0.5,
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "cy": {
+                    "default": 0.5,
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "stops": {
+                    "minItems": 2,
+                    "maxItems": 6,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "offset": {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 1
+                        },
+                        "color": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "offset",
+                        "color"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "vignette": {
+                    "default": 0,
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  }
+                },
+                "required": [
+                  "type",
+                  "stops"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "transition": {
+            "default": {
+              "type": "none",
+              "duration": 0
+            },
+            "type": "object",
+            "properties": {
+              "type": {
+                "default": "fade",
+                "type": "string",
+                "enum": [
+                  "none",
+                  "fade",
+                  "slide-left",
+                  "slide-up",
+                  "zoom",
+                  "wipe"
+                ]
+              },
+              "duration": {
+                "default": 0.5,
+                "type": "number",
+                "minimum": 0,
+                "maximum": 5
+              }
+            },
+            "additionalProperties": false
+          },
+          "elements": {
+            "default": [],
+            "maxItems": 40,
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 80
+                    },
+                    "x": {
+                      "default": 0.5,
+                      "type": "number",
+                      "minimum": -1,
+                      "maximum": 2
+                    },
+                    "y": {
+                      "default": 0.5,
+                      "type": "number",
+                      "minimum": -1,
+                      "maximum": 2
+                    },
+                    "rotation": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": -3600,
+                      "maximum": 3600
+                    },
+                    "scale": {
+                      "default": 1,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 10
+                    },
+                    "opacity": {
+                      "default": 1,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "start": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 120
+                    },
+                    "end": {
+                      "default": null,
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 120
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "animations": {
+                      "default": [],
+                      "maxItems": 8,
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "fade-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "fade-out"
+                              },
+                              "anchor": {
+                                "default": "end",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "slide-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "direction": {
+                                "default": "up",
+                                "type": "string",
+                                "enum": [
+                                  "left",
+                                  "right",
+                                  "up",
+                                  "down"
+                                ]
+                              },
+                              "distance": {
+                                "default": 0.1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 2
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "slide-out"
+                              },
+                              "anchor": {
+                                "default": "end",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "direction": {
+                                "default": "up",
+                                "type": "string",
+                                "enum": [
+                                  "left",
+                                  "right",
+                                  "up",
+                                  "down"
+                                ]
+                              },
+                              "distance": {
+                                "default": 0.1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 2
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "scale-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": 0.6,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "scale-out"
+                              },
+                              "anchor": {
+                                "default": "end",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "to": {
+                                "default": 0.6,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "zoom"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": 1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              },
+                              "to": {
+                                "default": 1.1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "rotate-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": -90,
+                                "type": "number",
+                                "minimum": -720,
+                                "maximum": 720
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "typewriter"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "tracking-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": 0.5,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 2
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "float"
+                              },
+                              "amplitude": {
+                                "default": 0.01,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 0.5
+                              },
+                              "period": {
+                                "default": 3,
+                                "type": "number",
+                                "minimum": 0.1,
+                                "maximum": 60
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "pulse"
+                              },
+                              "amount": {
+                                "default": 0.04,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1
+                              },
+                              "period": {
+                                "default": 1.6,
+                                "type": "number",
+                                "minimum": 0.1,
+                                "maximum": 60
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "spin"
+                              },
+                              "speed": {
+                                "default": 30,
+                                "type": "number",
+                                "minimum": -3600,
+                                "maximum": 3600
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "type": {
+                      "type": "string",
+                      "const": "text"
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 500
+                    },
+                    "font": {
+                      "default": "@heading",
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "Inter",
+                            "Space Grotesk",
+                            "Playfair Display"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "const": "@heading"
+                        },
+                        {
+                          "type": "string",
+                          "const": "@body"
+                        }
+                      ]
+                    },
+                    "weight": {
+                      "default": 700,
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "const": 400
+                        },
+                        {
+                          "type": "number",
+                          "const": 500
+                        },
+                        {
+                          "type": "number",
+                          "const": 600
+                        },
+                        {
+                          "type": "number",
+                          "const": 700
+                        },
+                        {
+                          "type": "number",
+                          "const": 800
+                        }
+                      ]
+                    },
+                    "size": {
+                      "default": 0.08,
+                      "type": "number",
+                      "minimum": 0.005,
+                      "maximum": 0.5
+                    },
+                    "color": {
+                      "default": "@text",
+                      "type": "string"
+                    },
+                    "align": {
+                      "default": "center",
+                      "type": "string",
+                      "enum": [
+                        "left",
+                        "center",
+                        "right"
+                      ]
+                    },
+                    "letterSpacing": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": -0.2,
+                      "maximum": 2
+                    },
+                    "lineHeight": {
+                      "default": 1.15,
+                      "type": "number",
+                      "minimum": 0.6,
+                      "maximum": 3
+                    },
+                    "maxWidth": {
+                      "default": 0.85,
+                      "type": "number",
+                      "minimum": 0.05,
+                      "maximum": 1
+                    },
+                    "uppercase": {
+                      "default": false,
+                      "type": "boolean"
+                    },
+                    "glow": {
+                      "default": null,
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "color": {
+                              "type": "string"
+                            },
+                            "strength": {
+                              "default": 0.6,
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1
+                            }
+                          },
+                          "required": [
+                            "color"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "type",
+                    "text"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 80
+                    },
+                    "x": {
+                      "default": 0.5,
+                      "type": "number",
+                      "minimum": -1,
+                      "maximum": 2
+                    },
+                    "y": {
+                      "default": 0.5,
+                      "type": "number",
+                      "minimum": -1,
+                      "maximum": 2
+                    },
+                    "rotation": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": -3600,
+                      "maximum": 3600
+                    },
+                    "scale": {
+                      "default": 1,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 10
+                    },
+                    "opacity": {
+                      "default": 1,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "start": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 120
+                    },
+                    "end": {
+                      "default": null,
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 120
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "animations": {
+                      "default": [],
+                      "maxItems": 8,
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "fade-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "fade-out"
+                              },
+                              "anchor": {
+                                "default": "end",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "slide-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "direction": {
+                                "default": "up",
+                                "type": "string",
+                                "enum": [
+                                  "left",
+                                  "right",
+                                  "up",
+                                  "down"
+                                ]
+                              },
+                              "distance": {
+                                "default": 0.1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 2
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "slide-out"
+                              },
+                              "anchor": {
+                                "default": "end",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "direction": {
+                                "default": "up",
+                                "type": "string",
+                                "enum": [
+                                  "left",
+                                  "right",
+                                  "up",
+                                  "down"
+                                ]
+                              },
+                              "distance": {
+                                "default": 0.1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 2
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "scale-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": 0.6,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "scale-out"
+                              },
+                              "anchor": {
+                                "default": "end",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "to": {
+                                "default": 0.6,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "zoom"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": 1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              },
+                              "to": {
+                                "default": 1.1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "rotate-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": -90,
+                                "type": "number",
+                                "minimum": -720,
+                                "maximum": 720
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "typewriter"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "tracking-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": 0.5,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 2
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "float"
+                              },
+                              "amplitude": {
+                                "default": 0.01,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 0.5
+                              },
+                              "period": {
+                                "default": 3,
+                                "type": "number",
+                                "minimum": 0.1,
+                                "maximum": 60
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "pulse"
+                              },
+                              "amount": {
+                                "default": 0.04,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1
+                              },
+                              "period": {
+                                "default": 1.6,
+                                "type": "number",
+                                "minimum": 0.1,
+                                "maximum": 60
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "spin"
+                              },
+                              "speed": {
+                                "default": 30,
+                                "type": "number",
+                                "minimum": -3600,
+                                "maximum": 3600
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "type": {
+                      "type": "string",
+                      "const": "shape"
+                    },
+                    "shape": {
+                      "type": "string",
+                      "enum": [
+                        "rect",
+                        "ellipse"
+                      ]
+                    },
+                    "width": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 3
+                    },
+                    "height": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 3
+                    },
+                    "fill": {
+                      "default": "@primary",
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "stroke": {
+                      "default": null,
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    },
+                    "strokeWidth": {
+                      "default": 0.004,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 0.1
+                    },
+                    "cornerRadius": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "glow": {
+                      "default": null,
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "color": {
+                              "type": "string"
+                            },
+                            "strength": {
+                              "default": 0.6,
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1
+                            }
+                          },
+                          "required": [
+                            "color"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "type",
+                    "shape",
+                    "width",
+                    "height"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 80
+                    },
+                    "x": {
+                      "default": 0.5,
+                      "type": "number",
+                      "minimum": -1,
+                      "maximum": 2
+                    },
+                    "y": {
+                      "default": 0.5,
+                      "type": "number",
+                      "minimum": -1,
+                      "maximum": 2
+                    },
+                    "rotation": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": -3600,
+                      "maximum": 3600
+                    },
+                    "scale": {
+                      "default": 1,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 10
+                    },
+                    "opacity": {
+                      "default": 1,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "start": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 120
+                    },
+                    "end": {
+                      "default": null,
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 120
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "animations": {
+                      "default": [],
+                      "maxItems": 8,
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "fade-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "fade-out"
+                              },
+                              "anchor": {
+                                "default": "end",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "slide-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "direction": {
+                                "default": "up",
+                                "type": "string",
+                                "enum": [
+                                  "left",
+                                  "right",
+                                  "up",
+                                  "down"
+                                ]
+                              },
+                              "distance": {
+                                "default": 0.1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 2
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "slide-out"
+                              },
+                              "anchor": {
+                                "default": "end",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "direction": {
+                                "default": "up",
+                                "type": "string",
+                                "enum": [
+                                  "left",
+                                  "right",
+                                  "up",
+                                  "down"
+                                ]
+                              },
+                              "distance": {
+                                "default": 0.1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 2
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "scale-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": 0.6,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "scale-out"
+                              },
+                              "anchor": {
+                                "default": "end",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "to": {
+                                "default": 0.6,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "zoom"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": 1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              },
+                              "to": {
+                                "default": 1.1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "rotate-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": -90,
+                                "type": "number",
+                                "minimum": -720,
+                                "maximum": 720
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "typewriter"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "tracking-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": 0.5,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 2
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "float"
+                              },
+                              "amplitude": {
+                                "default": 0.01,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 0.5
+                              },
+                              "period": {
+                                "default": 3,
+                                "type": "number",
+                                "minimum": 0.1,
+                                "maximum": 60
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "pulse"
+                              },
+                              "amount": {
+                                "default": 0.04,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1
+                              },
+                              "period": {
+                                "default": 1.6,
+                                "type": "number",
+                                "minimum": 0.1,
+                                "maximum": 60
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "spin"
+                              },
+                              "speed": {
+                                "default": 30,
+                                "type": "number",
+                                "minimum": -3600,
+                                "maximum": 3600
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "type": {
+                      "type": "string",
+                      "const": "image"
+                    },
+                    "assetId": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                    },
+                    "width": {
+                      "default": 0.5,
+                      "type": "number",
+                      "minimum": 0.01,
+                      "maximum": 3
+                    },
+                    "cornerRadius": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "shadow": {
+                      "default": false,
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "type",
+                    "assetId"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 80
+                    },
+                    "x": {
+                      "default": 0.5,
+                      "type": "number",
+                      "minimum": -1,
+                      "maximum": 2
+                    },
+                    "y": {
+                      "default": 0.5,
+                      "type": "number",
+                      "minimum": -1,
+                      "maximum": 2
+                    },
+                    "rotation": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": -3600,
+                      "maximum": 3600
+                    },
+                    "scale": {
+                      "default": 1,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 10
+                    },
+                    "opacity": {
+                      "default": 1,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "start": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 120
+                    },
+                    "end": {
+                      "default": null,
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 120
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "animations": {
+                      "default": [],
+                      "maxItems": 8,
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "fade-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "fade-out"
+                              },
+                              "anchor": {
+                                "default": "end",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "slide-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "direction": {
+                                "default": "up",
+                                "type": "string",
+                                "enum": [
+                                  "left",
+                                  "right",
+                                  "up",
+                                  "down"
+                                ]
+                              },
+                              "distance": {
+                                "default": 0.1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 2
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "slide-out"
+                              },
+                              "anchor": {
+                                "default": "end",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "direction": {
+                                "default": "up",
+                                "type": "string",
+                                "enum": [
+                                  "left",
+                                  "right",
+                                  "up",
+                                  "down"
+                                ]
+                              },
+                              "distance": {
+                                "default": 0.1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 2
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "scale-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": 0.6,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "scale-out"
+                              },
+                              "anchor": {
+                                "default": "end",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "to": {
+                                "default": 0.6,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "zoom"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": 1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              },
+                              "to": {
+                                "default": 1.1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "rotate-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": -90,
+                                "type": "number",
+                                "minimum": -720,
+                                "maximum": 720
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "typewriter"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "tracking-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": 0.5,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 2
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "float"
+                              },
+                              "amplitude": {
+                                "default": 0.01,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 0.5
+                              },
+                              "period": {
+                                "default": 3,
+                                "type": "number",
+                                "minimum": 0.1,
+                                "maximum": 60
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "pulse"
+                              },
+                              "amount": {
+                                "default": 0.04,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1
+                              },
+                              "period": {
+                                "default": 1.6,
+                                "type": "number",
+                                "minimum": 0.1,
+                                "maximum": 60
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "spin"
+                              },
+                              "speed": {
+                                "default": 30,
+                                "type": "number",
+                                "minimum": -3600,
+                                "maximum": 3600
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "type": {
+                      "type": "string",
+                      "const": "logo"
+                    },
+                    "assetId": {
+                      "default": null,
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "wordmark": {
+                      "default": "",
+                      "type": "string",
+                      "maxLength": 60
+                    },
+                    "size": {
+                      "default": 0.14,
+                      "type": "number",
+                      "minimum": 0.01,
+                      "maximum": 1
+                    },
+                    "color": {
+                      "default": "@text",
+                      "type": "string"
+                    },
+                    "markColor": {
+                      "default": "@primary",
+                      "type": "string"
+                    },
+                    "font": {
+                      "default": "@heading",
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "Inter",
+                            "Space Grotesk",
+                            "Playfair Display"
+                          ]
+                        },
+                        {
+                          "type": "string",
+                          "const": "@heading"
+                        },
+                        {
+                          "type": "string",
+                          "const": "@body"
+                        }
+                      ]
+                    },
+                    "glow": {
+                      "default": null,
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "color": {
+                              "type": "string"
+                            },
+                            "strength": {
+                              "default": 0.6,
+                              "type": "number",
+                              "minimum": 0,
+                              "maximum": 1
+                            }
+                          },
+                          "required": [
+                            "color"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "type"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 80
+                    },
+                    "x": {
+                      "default": 0.5,
+                      "type": "number",
+                      "minimum": -1,
+                      "maximum": 2
+                    },
+                    "y": {
+                      "default": 0.5,
+                      "type": "number",
+                      "minimum": -1,
+                      "maximum": 2
+                    },
+                    "rotation": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": -3600,
+                      "maximum": 3600
+                    },
+                    "scale": {
+                      "default": 1,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 10
+                    },
+                    "opacity": {
+                      "default": 1,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "start": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 120
+                    },
+                    "end": {
+                      "default": null,
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 120
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "animations": {
+                      "default": [],
+                      "maxItems": 8,
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "fade-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "fade-out"
+                              },
+                              "anchor": {
+                                "default": "end",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "slide-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "direction": {
+                                "default": "up",
+                                "type": "string",
+                                "enum": [
+                                  "left",
+                                  "right",
+                                  "up",
+                                  "down"
+                                ]
+                              },
+                              "distance": {
+                                "default": 0.1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 2
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "slide-out"
+                              },
+                              "anchor": {
+                                "default": "end",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "direction": {
+                                "default": "up",
+                                "type": "string",
+                                "enum": [
+                                  "left",
+                                  "right",
+                                  "up",
+                                  "down"
+                                ]
+                              },
+                              "distance": {
+                                "default": 0.1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 2
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "scale-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": 0.6,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "scale-out"
+                              },
+                              "anchor": {
+                                "default": "end",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "to": {
+                                "default": 0.6,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "zoom"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": 1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              },
+                              "to": {
+                                "default": 1.1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "rotate-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": -90,
+                                "type": "number",
+                                "minimum": -720,
+                                "maximum": 720
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "typewriter"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "tracking-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": 0.5,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 2
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "float"
+                              },
+                              "amplitude": {
+                                "default": 0.01,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 0.5
+                              },
+                              "period": {
+                                "default": 3,
+                                "type": "number",
+                                "minimum": 0.1,
+                                "maximum": 60
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "pulse"
+                              },
+                              "amount": {
+                                "default": 0.04,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1
+                              },
+                              "period": {
+                                "default": 1.6,
+                                "type": "number",
+                                "minimum": 0.1,
+                                "maximum": 60
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "spin"
+                              },
+                              "speed": {
+                                "default": 30,
+                                "type": "number",
+                                "minimum": -3600,
+                                "maximum": 3600
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "type": {
+                      "type": "string",
+                      "const": "device"
+                    },
+                    "frame": {
+                      "default": "browser",
+                      "type": "string",
+                      "enum": [
+                        "browser",
+                        "phone",
+                        "none"
+                      ]
+                    },
+                    "assetId": {
+                      "default": null,
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "width": {
+                      "default": 0.6,
+                      "type": "number",
+                      "minimum": 0.05,
+                      "maximum": 2
+                    },
+                    "accent": {
+                      "default": "@primary",
+                      "type": "string"
+                    },
+                    "shadow": {
+                      "default": true,
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "type"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 80
+                    },
+                    "x": {
+                      "default": 0.5,
+                      "type": "number",
+                      "minimum": -1,
+                      "maximum": 2
+                    },
+                    "y": {
+                      "default": 0.5,
+                      "type": "number",
+                      "minimum": -1,
+                      "maximum": 2
+                    },
+                    "rotation": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": -3600,
+                      "maximum": 3600
+                    },
+                    "scale": {
+                      "default": 1,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 10
+                    },
+                    "opacity": {
+                      "default": 1,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "start": {
+                      "default": 0,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 120
+                    },
+                    "end": {
+                      "default": null,
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0,
+                          "maximum": 120
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "animations": {
+                      "default": [],
+                      "maxItems": 8,
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "fade-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "fade-out"
+                              },
+                              "anchor": {
+                                "default": "end",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "slide-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "direction": {
+                                "default": "up",
+                                "type": "string",
+                                "enum": [
+                                  "left",
+                                  "right",
+                                  "up",
+                                  "down"
+                                ]
+                              },
+                              "distance": {
+                                "default": 0.1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 2
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "slide-out"
+                              },
+                              "anchor": {
+                                "default": "end",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "direction": {
+                                "default": "up",
+                                "type": "string",
+                                "enum": [
+                                  "left",
+                                  "right",
+                                  "up",
+                                  "down"
+                                ]
+                              },
+                              "distance": {
+                                "default": 0.1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 2
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "scale-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": 0.6,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "scale-out"
+                              },
+                              "anchor": {
+                                "default": "end",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "to": {
+                                "default": 0.6,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "zoom"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": 1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              },
+                              "to": {
+                                "default": 1.1,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 10
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "rotate-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": -90,
+                                "type": "number",
+                                "minimum": -720,
+                                "maximum": 720
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "typewriter"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "tracking-in"
+                              },
+                              "anchor": {
+                                "default": "start",
+                                "type": "string",
+                                "enum": [
+                                  "start",
+                                  "end"
+                                ]
+                              },
+                              "delay": {
+                                "default": 0,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 120
+                              },
+                              "duration": {
+                                "type": "number",
+                                "minimum": 0.01,
+                                "maximum": 120
+                              },
+                              "easing": {
+                                "default": "ease-out",
+                                "type": "string",
+                                "enum": [
+                                  "linear",
+                                  "ease-in",
+                                  "ease-out",
+                                  "ease-in-out",
+                                  "ease-out-back",
+                                  "ease-out-expo",
+                                  "ease-in-out-expo"
+                                ]
+                              },
+                              "from": {
+                                "default": 0.5,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 2
+                              }
+                            },
+                            "required": [
+                              "type",
+                              "duration"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "float"
+                              },
+                              "amplitude": {
+                                "default": 0.01,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 0.5
+                              },
+                              "period": {
+                                "default": 3,
+                                "type": "number",
+                                "minimum": 0.1,
+                                "maximum": 60
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "pulse"
+                              },
+                              "amount": {
+                                "default": 0.04,
+                                "type": "number",
+                                "minimum": 0,
+                                "maximum": 1
+                              },
+                              "period": {
+                                "default": 1.6,
+                                "type": "number",
+                                "minimum": 0.1,
+                                "maximum": 60
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "type": {
+                                "type": "string",
+                                "const": "spin"
+                              },
+                              "speed": {
+                                "default": 30,
+                                "type": "number",
+                                "minimum": -3600,
+                                "maximum": 3600
+                              }
+                            },
+                            "required": [
+                              "type"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "type": {
+                      "type": "string",
+                      "const": "particles"
+                    },
+                    "count": {
+                      "default": 60,
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 400
+                    },
+                    "color": {
+                      "default": "@accent",
+                      "type": "string"
+                    },
+                    "size": {
+                      "default": 0.003,
+                      "type": "number",
+                      "minimum": 0.0005,
+                      "maximum": 0.05
+                    },
+                    "speed": {
+                      "default": 0.02,
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 2
+                    },
+                    "seed": {
+                      "default": 1,
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 2147483647
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "type"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "notes": {
+            "type": "string",
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "id",
+          "duration",
+          "background"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "render": {
+      "default": {
+        "crf": 18,
+        "preset": "veryfast"
+      },
+      "type": "object",
+      "properties": {
+        "crf": {
+          "default": 18,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 51
+        },
+        "preset": {
+          "default": "veryfast",
+          "type": "string",
+          "enum": [
+            "ultrafast",
+            "veryfast",
+            "fast",
+            "medium",
+            "slow"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "generation": {
+      "type": "object",
+      "properties": {
+        "brief": {
+          "type": "string",
+          "maxLength": 4000
+        },
+        "template": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "planner": {
+          "type": "string",
+          "maxLength": 64
+        },
+        "model": {
+          "type": "string",
+          "maxLength": 128
+        },
+        "at": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+        },
+        "warnings": {
+          "default": [],
+          "maxItems": 50,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 500
+          }
+        },
+        "unsupported": {
+          "default": [],
+          "maxItems": 50,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "maxLength": 300
+          }
+        }
+      },
+      "required": [
+        "brief",
+        "template",
+        "planner",
+        "at"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "format",
+    "version",
+    "id",
+    "name",
+    "createdAt",
+    "updatedAt",
+    "settings",
+    "brand",
+    "scenes"
+  ],
+  "additionalProperties": false
+}
