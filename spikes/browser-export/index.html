@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Spike A · Browser export</title>
+    <link rel="stylesheet" href="../shared/spike.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Spike A · Browser export</h1>
+      <p class="muted">
+        Decode footage with WebCodecs (Mediabunny), crop to 9:16, draw captions and SceneWright graphics, encode
+        H.264 + AAC MP4. Gate: export ≤ 1× real time. Load a file below or pass <code>?src=/path/in/repo.mp4</code>.
+      </p>
+      <section class="controls">
+        <label>Footage <input id="file" type="file" accept="video/*" /></label>
+        <label>Transcript JSON (optional) <input id="words" type="file" accept=".json,application/json" /></label>
+        <label>Start (s) <input id="start" type="number" value="0" min="0" step="1" /></label>
+        <label>Length (s) <input id="length" type="number" value="60" min="1" max="600" step="1" /></label>
+        <label
+          >Output
+          <select id="size">
+            <option value="1080x1920">1080×1920 (9:16)</option>
+            <option value="720x1280">720×1280 (9:16)</option>
+            <option value="1920x1080">1920×1080 (16:9)</option>
+          </select>
+        </label>
+        <label>FPS <input id="fps" type="number" value="30" min="1" max="60" /></label>
+        <label><input id="transcode-audio" type="checkbox" checked /> Re-encode audio (as the editor will, for mixing)</label>
+      </section>
+      <section class="actions">
+        <button id="export">Export reel</button>
+        <button id="decode" class="secondary">Decode whole file (throughput)</button>
+        <span id="status" class="muted"></span>
+      </section>
+      <progress id="progress" max="1" value="0"></progress>
+      <section class="results">
+        <pre id="result">No run yet.</pre>
+        <video id="player" controls playsinline></video>
+      </section>
+      <a id="download" hidden>Download MP4</a>
+      <h2 class="muted" style="font-size: 14px">Frames from the exported file (1 s, 5.5 s, 15.5 s, end)</h2>
+      <canvas id="sheet" hidden style="max-width: 100%"></canvas>
+    </main>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
