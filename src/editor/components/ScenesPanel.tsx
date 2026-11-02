@@ -10,6 +10,7 @@ import { compileScene, SCENE_KIND_LABELS } from '../../storyboard/scene-kinds';
 import { SCENE_KINDS, StoryboardSceneSchema, type SceneKind } from '../../storyboard/schema';
 import { SceneSchema } from '../../project/schema';
 import { createBrowserEnv } from '../runtime';
+import { Icon } from './icons';
 
 const THUMB_W = 160;
 
@@ -119,10 +120,10 @@ export function ScenesPanel({ project, assets, assetsVersion, selectedSceneId, o
             {scene.id === selected.id && (
               <div className="scene-actions">
                 <button className="icon-btn" title="Move up" aria-label="Move scene up" disabled={i === 0} onClick={() => edit((p) => moveScene(p, scene.id, -1))}>
-                  ↑
+                  <Icon name="up" />
                 </button>
                 <button className="icon-btn" title="Move down" aria-label="Move scene down" disabled={i === project.scenes.length - 1} onClick={() => edit((p) => moveScene(p, scene.id, 1))}>
-                  ↓
+                  <Icon name="down" />
                 </button>
                 <button
                   className="icon-btn"
@@ -135,7 +136,7 @@ export function ScenesPanel({ project, assets, assetsVersion, selectedSceneId, o
                     onSelect(r.sceneId);
                   }}
                 >
-                  ⧉
+                  <Icon name="duplicate" />
                 </button>
                 <button
                   className="icon-btn danger"
@@ -148,7 +149,7 @@ export function ScenesPanel({ project, assets, assetsVersion, selectedSceneId, o
                     if (next) onSelect(next.id);
                   }}
                 >
-                  ✕
+                  <Icon name="close" />
                 </button>
               </div>
             )}

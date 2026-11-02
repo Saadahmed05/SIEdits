@@ -6,6 +6,7 @@ import type { Project } from '../../project/schema';
 import type { Health } from '../api';
 import { useAssetResolver, useFontsReady } from '../runtime';
 import { useProjectState, type SaveStatus } from '../useProjectState';
+import { Icon } from './icons';
 import { ElementInspector, SceneInspector } from './Inspector';
 import { AssetsPanel, BrandPanel, BriefPanel, RenderPanel } from './Panels';
 import { Preview } from './Preview';
@@ -100,6 +101,10 @@ export function Editor({ initial, health, initialReport, onExit }: { initial: Pr
         e.preventDefault();
         if (e.shiftKey) state.redo();
         else state.undo();
+      } else if (e.ctrlKey && e.key.toLowerCase() === 'y') {
+        if (typing) return;
+        e.preventDefault();
+        state.redo();
       } else if (!typing && e.code === 'Space') {
         e.preventDefault();
         setPlaying((p) => !p);
@@ -116,7 +121,8 @@ export function Editor({ initial, health, initialReport, onExit }: { initial: Pr
     <div className="editor">
       <header className="topbar">
         <button className="btn ghost" onClick={onExit} aria-label="Back to projects">
-          ← Projects
+          <Icon name="back" />
+          Projects
         </button>
         <input
           className="project-name"
@@ -128,10 +134,10 @@ export function Editor({ initial, health, initialReport, onExit }: { initial: Pr
         <SaveIndicator status={state.status} />
         <div className="spacer" />
         <button className="icon-btn" onClick={state.undo} disabled={!state.canUndo} aria-label="Undo" title="Undo (Ctrl/Cmd+Z)">
-          ↶
+          <Icon name="undo" />
         </button>
-        <button className="icon-btn" onClick={state.redo} disabled={!state.canRedo} aria-label="Redo" title="Redo (Shift+Ctrl/Cmd+Z)">
-          ↷
+        <button className="icon-btn" onClick={state.redo} disabled={!state.canRedo} aria-label="Redo" title="Redo (Ctrl+Y or Shift+Ctrl/Cmd+Z)">
+          <Icon name="redo" />
         </button>
         <button
           className="btn primary"
@@ -197,7 +203,8 @@ export function Editor({ initial, health, initialReport, onExit }: { initial: Pr
                 {element ? (
                   <>
                     <button className="link back" onClick={() => setElementId(null)}>
-                      ← {scene.name}
+                      <Icon name="back" />
+                      {scene.name}
                     </button>
                     <ElementInspector project={project} scene={scene} element={element} edit={edit} />
                   </>

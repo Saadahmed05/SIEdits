@@ -21,21 +21,21 @@ import { parseProject } from '../src/project/schema';
 import { StoryboardSchema, type Storyboard } from '../src/storyboard/schema';
 import { getTemplate } from '../src/storyboard/templates';
 
-const NOVA = getTemplate('product-launch').defaultBrief;
+const SIEDITS = getTemplate('product-launch').defaultBrief;
 const settings = { width: 1920, height: 1080, fps: 30 };
 const deps = (providers: PlannerProvider[]) => ({ providers, newId: () => 'p1', now: () => '2026-01-01T00:00:00.000Z' });
-const request = (overrides: Record<string, unknown> = {}) => ({ brief: NOVA, templateId: 'product-launch', settings, targetDuration: 12, ...overrides });
+const request = (overrides: Record<string, unknown> = {}) => ({ brief: SIEDITS, templateId: 'product-launch', settings, targetDuration: 12, ...overrides });
 
 const validBoard: Storyboard = StoryboardSchema.parse({
-  title: 'Nova',
-  productName: 'Nova',
+  title: 'SIEdits',
+  productName: 'SIEdits',
   tagline: 'Light up your data',
   mood: 'bold-vibrant',
   palette: { primary: '#123456' },
   scenes: [
-    { kind: 'title', duration: 4, headline: 'Meet Nova' },
-    { kind: 'feature-list', duration: 5, headline: 'Why Nova', items: ['Fast', 'Simple'] },
-    { kind: 'logo-reveal', duration: 4, headline: 'Nova' },
+    { kind: 'title', duration: 4, headline: 'Meet SIEdits' },
+    { kind: 'feature-list', duration: 5, headline: 'Why SIEdits', items: ['Fast', 'Simple'] },
+    { kind: 'logo-reveal', duration: 4, headline: 'SIEdits' },
   ],
   unsupported: ['3D camera fly-through'],
 });
@@ -48,13 +48,13 @@ const fakeProvider = (impl: PlannerProvider['plan'], configured = true): Planner
 });
 
 describe('heuristic planner', () => {
-  it('extracts name, duration, mood and requested scenes from the Nova brief', () => {
-    expect(extractDuration(NOVA)).toBe(12);
-    expect(extractProductName(NOVA)).toBe('Nova');
-    const { storyboard, warnings } = planFromBrief({ brief: NOVA, template: getTemplate('product-launch'), targetDuration: 30, settings });
+  it('extracts name, duration, mood and requested scenes from the SIEdits brief', () => {
+    expect(extractDuration(SIEDITS)).toBe(12);
+    expect(extractProductName(SIEDITS)).toBe('SIEdits');
+    const { storyboard, warnings } = planFromBrief({ brief: SIEDITS, template: getTemplate('product-launch'), targetDuration: 30, settings });
     expect(storyboard.mood).toBe('dark-cinematic');
     expect(storyboard.scenes.map((s) => s.kind)).toEqual(['title', 'product-reveal', 'logo-reveal']);
-    expect(storyboard.productName).toBe('Nova');
+    expect(storyboard.productName).toBe('SIEdits');
     expect(warnings).toEqual([]);
     expect(StoryboardSchema.safeParse(storyboard).success).toBe(true);
   });
@@ -66,7 +66,7 @@ describe('heuristic planner', () => {
   });
 
   it('adds scenes the brief asks for and respects the duration budget', () => {
-    const kinds = chooseSceneKinds('features: speed, privacy. 3x faster. Sign up at nova.dev', ['title', 'product-reveal', 'logo-reveal'], 20);
+    const kinds = chooseSceneKinds('features: speed, privacy. 3x faster. Sign up at siedits.dev', ['title', 'product-reveal', 'logo-reveal'], 20);
     expect(kinds).toEqual(['title', 'product-reveal', 'feature-list', 'stat', 'call-to-action', 'logo-reveal']);
     expect(chooseSceneKinds('features and logo', ['title', 'product-reveal', 'logo-reveal'], 5)).toHaveLength(2);
   });
@@ -83,7 +83,7 @@ describe('heuristic planner', () => {
   it('reports unsupported requests instead of silently ignoring them', () => {
     const u = extractUnsupported('A 3D camera fly-through with an epic soundtrack and a voice-over');
     expect(u).toHaveLength(3);
-    expect(extractUnsupported(NOVA)).toEqual([]);
+    expect(extractUnsupported(SIEDITS)).toEqual([]);
   });
 
   it('labels placeholder copy with warnings', () => {
@@ -217,7 +217,7 @@ describe('provider adapters (against local fake endpoints)', () => {
     content: [{ type: 'text', text }],
     usage: { input_tokens: 1, output_tokens: 1 },
   });
-  const planRequest = { brief: NOVA, template: getTemplate('product-launch'), targetDuration: 12, settings };
+  const planRequest = { brief: SIEDITS, template: getTemplate('product-launch'), targetDuration: 12, settings };
 
   it('anthropic: sends structured-output request with fallbacks and parses the reply', async () => {
     anthropicReply = message('end_turn', JSON.stringify(validBoard));

@@ -7,7 +7,7 @@ through an MCP connector and the user can always undo or tweak what it did.
 
 > Status: **week 1, go/no-go spikes.** The repository is seeded from
 > [SceneWright](https://github.com/syedmukheeth/video-editing) v0.1, which already turns a
-> brief into a validated scene graph and renders identical frames in preview and export.
+> brief into a validated scene graph and renders matching frames in preview and export.
 > The multitrack timeline, captions and footage import are not built yet.
 
 ## How it fits together
@@ -33,13 +33,18 @@ Each spike answers one go/no-go question before product code is written. See
 
 ## Quick start (SceneWright editor)
 
-Requirements: **Node.js 22+** and **FFmpeg with libx264**.
+Requirements: **Node.js 22+** and **FFmpeg with libx264**, on Windows, macOS or Linux. If FFmpeg
+is not on your PATH, set `FFMPEG_PATH` and `FFPROBE_PATH`.
 
 ```bash
 npm install
 npm run dev            # API on :8787 + editor on http://localhost:5173
 npm run typecheck && npm test
+npm run build && npm start   # production: editor and API on http://127.0.0.1:8787
 ```
+
+The API has no accounts, so it only answers requests addressed to this machine from its own
+origin. To serve it under another name, set `ALLOWED_HOSTS`.
 
 Optional AI planning: copy `.env.example` to `.env` and set `ANTHROPIC_API_KEY`, or point
 `OPENAI_BASE_URL`/`OPENAI_MODEL` at an OpenAI-compatible server. Without either, the built-in

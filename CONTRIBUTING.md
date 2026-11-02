@@ -11,7 +11,9 @@ npm run typecheck && npm test
 ```
 
 FFmpeg with libx264 must be installed for render tests. For browser tests:
-`npm run test:e2e` (set `PW_CHROMIUM_PATH` to reuse an installed Chromium).
+`npm run test:e2e` (set `PW_CHROMIUM_PATH` to reuse an installed Chromium). It includes a
+pixel comparison of preview against export (`e2e/parity.spec.ts`): if it fails after an engine
+change, the two renderers have drifted apart, so fix the drawing code and leave the budget alone.
 
 ## Ground rules
 

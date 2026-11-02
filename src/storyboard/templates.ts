@@ -16,7 +16,7 @@ export const TEMPLATES: Template[] = [
     description: 'Title, product reveal and logo outro; adds features, stats or a call to action when the brief asks.',
     sceneKinds: ['title', 'product-reveal', 'logo-reveal'],
     defaultBrief:
-      'Create a 12-second cinematic launch animation for a fictional SaaS product called Nova. Use a dark background, glowing typography, a product screenshot reveal, smooth transitions, and an animated final logo.',
+      'Create a 12-second cinematic launch animation for an open-source AI video editor called SIEdits. Use a dark background, clean typography, a product screenshot reveal, smooth transitions, and an animated final logo.',
   },
   {
     id: 'kinetic-typography',

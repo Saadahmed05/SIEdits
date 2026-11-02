@@ -42,6 +42,9 @@ export function drawScene(
       y: ay + local.y * state.scale,
       width: local.width * state.scale,
       height: local.height * state.scale,
+      anchorX: ax,
+      anchorY: ay,
+      rotation: state.rotation,
     });
   }
 }

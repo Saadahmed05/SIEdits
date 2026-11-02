@@ -1,8 +1,8 @@
 {
   "format": "scenewright.project",
   "version": 1,
-  "id": "nova-launch",
-  "name": "Nova launch",
+  "id": "siedits-launch",
+  "name": "SIEdits launch",
   "createdAt": "2026-10-22T00:00:00.000Z",
   "updatedAt": "2026-10-22T00:00:00.000Z",
   "settings": {
@@ -11,11 +11,11 @@
     "fps": 30
   },
   "brand": {
-    "primary": "#7c5cff",
-    "secondary": "#00d4ff",
-    "accent": "#b9a8ff",
-    "background": "#07080d",
-    "text": "#f5f6fa",
+    "primary": "#d98a3d",
+    "secondary": "#8f8f93",
+    "accent": "#e8d3b8",
+    "background": "#0e0e0f",
+    "text": "#f2f0eb",
     "headingFont": "Inter",
     "bodyFont": "Inter"
   },
@@ -26,56 +26,14 @@
       "name": "1. Title",
       "duration": 3.9,
       "background": {
-        "type": "radial-gradient",
-        "cx": 0.5,
-        "cy": 0.35,
-        "stops": [
-          {
-            "offset": 0,
-            "color": "#1a1533"
-          },
-          {
-            "offset": 0.6,
-            "color": "@background"
-          },
-          {
-            "offset": 1,
-            "color": "@background"
-          }
-        ],
-        "vignette": 0.5
+        "type": "solid",
+        "color": "@background"
       },
       "transition": {
         "type": "none",
         "duration": 0
       },
       "elements": [
-        {
-          "id": "particles-1",
-          "name": "Particles",
-          "x": 0.5,
-          "y": 0.5,
-          "rotation": 0,
-          "scale": 1,
-          "opacity": 0.6,
-          "start": 0,
-          "end": null,
-          "animations": [
-            {
-              "type": "fade-in",
-              "anchor": "start",
-              "delay": 0,
-              "duration": 1.2,
-              "easing": "linear"
-            }
-          ],
-          "type": "particles",
-          "count": 70,
-          "color": "@accent",
-          "size": 0.0025,
-          "speed": 0.015,
-          "seed": 7
-        },
         {
           "id": "headline-1",
           "name": "Headline",
@@ -119,7 +77,7 @@
             }
           ],
           "type": "text",
-          "text": "Meet Nova",
+          "text": "Meet SIEdits",
           "font": "@heading",
           "weight": 800,
           "size": 0.1,
@@ -129,10 +87,7 @@
           "lineHeight": 1.15,
           "maxWidth": 0.8,
           "uppercase": false,
-          "glow": {
-            "color": "@primary",
-            "strength": 0.55
-          }
+          "glow": null
         },
         {
           "id": "rule-1",
@@ -169,10 +124,7 @@
           "stroke": null,
           "strokeWidth": 0.004,
           "cornerRadius": 0.003,
-          "glow": {
-            "color": "@primary",
-            "strength": 0.8
-          }
+          "glow": null
         },
         {
           "id": "subheadline-1",
@@ -210,7 +162,7 @@
             }
           ],
           "type": "text",
-          "text": "The SaaS platform built for what's next",
+          "text": "Built for what's next",
           "font": "@body",
           "weight": 500,
           "size": 0.038,
@@ -230,24 +182,8 @@
       "name": "2. Product reveal",
       "duration": 5.4,
       "background": {
-        "type": "radial-gradient",
-        "cx": 0.5,
-        "cy": 0.35,
-        "stops": [
-          {
-            "offset": 0,
-            "color": "#1a1533"
-          },
-          {
-            "offset": 0.6,
-            "color": "@background"
-          },
-          {
-            "offset": 1,
-            "color": "@background"
-          }
-        ],
-        "vignette": 0.5
+        "type": "solid",
+        "color": "@background"
       },
       "transition": {
         "type": "zoom",
@@ -341,7 +277,7 @@
             }
           ],
           "type": "text",
-          "text": "Nova in action",
+          "text": "SIEdits in action",
           "font": "@heading",
           "weight": 800,
           "size": 0.07,
@@ -409,56 +345,14 @@
       "name": "3. Logo reveal",
       "duration": 3.9,
       "background": {
-        "type": "radial-gradient",
-        "cx": 0.5,
-        "cy": 0.5,
-        "stops": [
-          {
-            "offset": 0,
-            "color": "#241a4d"
-          },
-          {
-            "offset": 0.7,
-            "color": "@background"
-          },
-          {
-            "offset": 1,
-            "color": "@background"
-          }
-        ],
-        "vignette": 0.6
+        "type": "solid",
+        "color": "#171718"
       },
       "transition": {
         "type": "fade",
         "duration": 0.6
       },
       "elements": [
-        {
-          "id": "particles-2",
-          "name": "Particles",
-          "x": 0.5,
-          "y": 0.5,
-          "rotation": 0,
-          "scale": 1,
-          "opacity": 0.6,
-          "start": 0,
-          "end": null,
-          "animations": [
-            {
-              "type": "fade-in",
-              "anchor": "start",
-              "delay": 0,
-              "duration": 1.2,
-              "easing": "linear"
-            }
-          ],
-          "type": "particles",
-          "count": 70,
-          "color": "@accent",
-          "size": 0.0025,
-          "speed": 0.015,
-          "seed": 23
-        },
         {
           "id": "ring-1",
           "name": "Ring",
@@ -509,10 +403,7 @@
           "stroke": "@primary",
           "strokeWidth": 0.003,
           "cornerRadius": 0,
-          "glow": {
-            "color": "@primary",
-            "strength": 0.9
-          }
+          "glow": null
         },
         {
           "id": "logo-1",
@@ -543,15 +434,12 @@
           ],
           "type": "logo",
           "assetId": null,
-          "wordmark": "Nova",
+          "wordmark": "SIEdits",
           "size": 0.13,
           "color": "@text",
           "markColor": "@primary",
           "font": "@heading",
-          "glow": {
-            "color": "@primary",
-            "strength": 0.5
-          }
+          "glow": null
         }
       ],
       "notes": "Logo reveal scene"
@@ -562,7 +450,7 @@
     "preset": "veryfast"
   },
   "generation": {
-    "brief": "Create a 12-second cinematic launch animation for a fictional SaaS product called Nova. Use a dark background, glowing typography, a product screenshot reveal, smooth transitions, and an animated final logo.",
+    "brief": "Create a 12-second cinematic launch animation for an open-source AI video editor called SIEdits. Use a dark background, clean typography, a product screenshot reveal, smooth transitions, and an animated final logo.",
     "template": "product-launch",
     "planner": "heuristic",
     "at": "2026-10-22T00:00:00.000Z",

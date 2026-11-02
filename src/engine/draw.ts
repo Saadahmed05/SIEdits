@@ -227,11 +227,8 @@ const drawLogo: Drawer<LogoElement> = (dc, el, state) => {
   const markColor = color(dc, el.markColor);
 
   if (el.glow) setGlow(dc, rgba(color(dc, el.glow.color), 0.9), markSize * 0.35 * el.glow.strength, state.scale);
-  const grad = ctx.createLinearGradient(left, -markSize / 2, left + markSize, markSize / 2);
-  grad.addColorStop(0, mix(markColor, '#ffffff', 0.25));
-  grad.addColorStop(1, markColor);
-  roundRectPath(ctx, left, -markSize / 2, markSize, markSize, markSize * 0.26);
-  ctx.fillStyle = grad;
+  roundRectPath(ctx, left, -markSize / 2, markSize, markSize, markSize * 0.08);
+  ctx.fillStyle = markColor;
   ctx.fill();
   clearShadow(ctx);
 

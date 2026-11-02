@@ -50,7 +50,7 @@ written to `DATA_DIR/renders/<projectId>/<jobId>.mp4` and served with HTTP range
 ## From the command line
 
 ```bash
-npm run render -- examples/nova-launch.project.json out/nova.mp4
+npm run render -- examples/siedits-launch.project.json out/siedits.mp4
 npm run render -- my-export.scenewright.json out/video.mp4          # bundles carry their images
 npm run render -- project.json out.mp4 --assets ./path/to/assets     # plain files + asset dir
 ```
@@ -59,7 +59,7 @@ npm run render -- project.json out.mp4 --assets ./path/to/assets     # plain fil
 
 | Project | Output | Wall time |
 |---|---|---|
-| Nova example | 1920×1080, 30 fps, 360 frames | 12.2 s (~1× real time) |
+| SIEdits example | 1920×1080, 30 fps, 360 frames | 12.2 s (~1× real time) |
 | Smoke test | 640×360, 24 fps, 146 frames | 1.1 s |
 
 Rendering is single-threaded per job (Skia drawing + an x264 process). Parallel chunked

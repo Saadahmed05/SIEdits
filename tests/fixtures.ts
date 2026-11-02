@@ -42,7 +42,7 @@ export function smallProject(overrides: Partial<ProjectInput> = {}): Project {
 }
 
 export function exampleProjectJson(): unknown {
-  return JSON.parse(readFileSync(new URL('../examples/nova-launch.project.json', import.meta.url), 'utf8'));
+  return JSON.parse(readFileSync(new URL('../examples/siedits-launch.project.json', import.meta.url), 'utf8'));
 }
 
 /** A valid 4x4 PNG generated with @napi-rs/canvas. */

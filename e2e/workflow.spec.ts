@@ -9,18 +9,18 @@ import os from 'node:os';
 import path from 'node:path';
 import { expect, test, type Page } from '@playwright/test';
 
-const NEW_HEADLINE = 'Nova is here';
+const NEW_HEADLINE = 'SIEdits is here';
 const NEW_PRIMARY = '#ff3d81';
 
 function probe(file: string) {
-  const out = execFileSync('ffprobe', ['-v', 'error', '-count_frames', '-select_streams', 'v:0', '-show_entries', 'stream=codec_name,width,height,nb_read_frames:format=duration', '-of', 'json', file]);
+  const out = execFileSync(process.env.FFPROBE_PATH || 'ffprobe', ['-v', 'error', '-count_frames', '-select_streams', 'v:0', '-show_entries', 'stream=codec_name,width,height,nb_read_frames:format=duration', '-of', 'json', file]);
   const data = JSON.parse(out.toString());
   return { ...data.streams[0], duration: Number(data.format.duration) };
 }
 
 /** Fraction of pixels in a decoded frame that are close to the given color. */
 function colorShare(file: string, at: number, hex: string): number {
-  const raw = execFileSync('ffmpeg', ['-v', 'error', '-ss', String(at), '-i', file, '-frames:v', '1', '-vf', 'scale=320:180', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-']);
+  const raw = execFileSync(process.env.FFMPEG_PATH || 'ffmpeg', ['-v', 'error', '-ss', String(at), '-i', file, '-frames:v', '1', '-vf', 'scale=320:180', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-']);
   const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16));
   let hits = 0;
   for (let i = 0; i < raw.length; i += 3) {
@@ -51,11 +51,11 @@ test('brief → edit headline & brand color → preview → export → reopen �
   // 1–3. Open the app and create a project from the launch brief (offline planner).
   await page.goto('/');
   await expect(page.getByText('Renderer ready')).toBeVisible();
-  await page.getByLabel('New project name').fill('Nova launch');
-  await expect(page.getByLabel('Brief')).toHaveValue(/called Nova/);
+  await page.getByLabel('New project name').fill('SIEdits launch');
+  await expect(page.getByLabel('Brief')).toHaveValue(/called SIEdits/);
   await page.getByLabel('Format').selectOption('720p');
   await page.getByLabel('Frame rate').selectOption('24');
-  await page.getByRole('button', { name: 'Generate editable animation' }).click();
+  await page.getByRole('button', { name: 'Create project' }).click();
 
   // 4. An editable multi-scene structure.
   const scenes = page.getByRole('complementary', { name: 'Scenes' }).getByRole('listitem');
@@ -69,7 +69,7 @@ test('brief → edit headline & brand color → preview → export → reopen �
   await scenes.nth(0).getByRole('button', { name: /Select scene/ }).click();
   await page.getByRole('button', { name: 'Select layer Headline' }).click();
   const text = page.getByLabel('Text', { exact: true });
-  await expect(text).toHaveValue('Meet Nova');
+  await expect(text).toHaveValue('Meet SIEdits');
   await text.fill(NEW_HEADLINE);
   await expect(page.getByTestId('save-status')).toHaveText('Saved', { timeout: 10_000 });
 
@@ -105,7 +105,7 @@ test('brief → edit headline & brand color → preview → export → reopen �
 
   // 8. Reopen the saved project from the project list.
   await page.getByRole('button', { name: 'Back to projects' }).click();
-  await page.getByRole('button', { name: 'Open project Nova launch' }).click();
+  await page.getByRole('button', { name: 'Open project SIEdits launch' }).click();
   await scenes.nth(0).getByRole('button', { name: /Select scene/ }).click();
   await page.getByRole('button', { name: 'Select layer Headline' }).click();
   await expect(page.getByLabel('Text', { exact: true })).toHaveValue(NEW_HEADLINE);
