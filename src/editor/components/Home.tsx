@@ -4,6 +4,7 @@ import type { Project } from '../../project/schema';
 import type { ProjectSummary } from '../../server/storage';
 import type { Template } from '../../storyboard/templates';
 import { api, ApiError, type Health } from '../api';
+import { Icon } from './icons';
 
 const FORMATS = [
   { id: '16:9', label: 'Landscape 16:9', width: 1920, height: 1080 },
@@ -56,16 +57,16 @@ function NewProject({ health, templates, onCreated }: { health: Health | null; t
     <form className="new-project" onSubmit={submit} aria-label="New project">
       <h2>New project</h2>
       <label className="stack">
-        <span>Project name</span>
-        <input aria-label="New project name" value={name} maxLength={120} placeholder="e.g. Nova launch" onChange={(e) => setName(e.target.value)} />
+        <span>Name</span>
+        <input aria-label="New project name" value={name} maxLength={120} placeholder="Untitled" onChange={(e) => setName(e.target.value)} />
       </label>
       <div className="stack">
         <span>Template</span>
-        <div className="template-grid" role="radiogroup" aria-label="Template">
+        <div className="template-list" role="radiogroup" aria-label="Template">
           {templates.map((t) => (
             <button type="button" role="radio" aria-checked={t.id === templateId} key={t.id} className={`template ${t.id === templateId ? 'active' : ''}`} onClick={() => setTemplateId(t.id)}>
-              <strong>{t.label}</strong>
-              <span className="muted small">{t.description}</span>
+              {t.label}
+              {t.id === templateId && <span className="muted small">{t.description}</span>}
             </button>
           ))}
         </div>
@@ -75,7 +76,7 @@ function NewProject({ health, templates, onCreated }: { health: Health | null; t
           <span>Brief</span>
           <textarea
             aria-label="Brief"
-            rows={5}
+            rows={4}
             maxLength={4000}
             value={brief}
             onChange={(e) => {
@@ -85,22 +86,22 @@ function NewProject({ health, templates, onCreated }: { health: Health | null; t
           />
           <span className="muted small">
             {aiConfigured
-              ? 'An AI planner is configured. If it fails, the built-in planner is used and you will be told why.'
-              : 'No AI provider configured — the built-in offline planner turns the brief into scenes. Add an API key in .env to enable AI planning.'}
+              ? 'If the AI planner fails, the built-in planner takes over and you will see why.'
+              : 'Using the built-in planner. Add an API key in .env for AI planning.'}
           </span>
         </label>
       )}
+      <label className="stack">
+        <span>Format</span>
+        <select aria-label="Format" value={format} onChange={(e) => setFormat(e.target.value)}>
+          {FORMATS.map((f) => (
+            <option key={f.id} value={f.id}>
+              {f.label} ({f.width}×{f.height})
+            </option>
+          ))}
+        </select>
+      </label>
       <div className="row">
-        <label className="stack">
-          <span>Format</span>
-          <select aria-label="Format" value={format} onChange={(e) => setFormat(e.target.value)}>
-            {FORMATS.map((f) => (
-              <option key={f.id} value={f.id}>
-                {f.label} ({f.width}×{f.height})
-              </option>
-            ))}
-          </select>
-        </label>
         <label className="stack">
           <span>Frame rate</span>
           <select aria-label="Frame rate" value={fps} onChange={(e) => setFps(Number(e.target.value))}>
@@ -130,9 +131,11 @@ function NewProject({ health, templates, onCreated }: { health: Health | null; t
           </select>
         </label>
       )}
-      <button className="btn primary large" type="submit" disabled={busy}>
-        {busy ? 'Creating…' : templateId === 'blank' ? 'Create project' : 'Generate editable animation'}
-      </button>
+      <div className="actions">
+        <button className="btn primary" type="submit" disabled={busy}>
+          {busy ? 'Creating…' : 'Create project'}
+        </button>
+      </div>
       {error && (
         <div className="error small" role="alert">
           {error.message}
@@ -191,17 +194,13 @@ export function Home({ health, onOpen }: { health: Health | null; onOpen: (p: Pr
   return (
     <div className="home">
       <header className="home-header">
-        <div className="brand-mark">
-          <span className="logo-dot" /> SIEdits
-        </div>
-        <span className="muted small">Open-source motion graphics · brief → editable scenes → MP4</span>
+        <span className="wordmark">SIEdits</span>
         <div className="spacer" />
-        <span className={`status-chip ${health?.ffmpeg ? 'ok' : 'bad'}`} title={health?.ffmpeg ?? 'FFmpeg not found'}>
+        <span className={`status ${health && !health.ffmpeg ? 'bad' : ''}`} title={health?.ffmpeg ?? 'FFmpeg not found'}>
           {health ? (health.ffmpeg ? 'Renderer ready' : 'FFmpeg missing') : 'Connecting…'}
         </span>
       </header>
       <div className="home-body">
-        <NewProject health={health} templates={templates} onCreated={(p, r) => onOpen(p, r)} />
         <section className="project-list" aria-label="Projects">
           <header>
             <h2>Projects</h2>
@@ -216,16 +215,29 @@ export function Home({ health, onOpen }: { health: Health | null; onOpen: (p: Pr
             </p>
           )}
           {projects === null && <p className="muted">Loading…</p>}
-          {projects?.length === 0 && <p className="muted">No projects yet. Create one on the left, or import a .scenewright.json bundle.</p>}
+          {projects?.length === 0 && <p className="muted">No projects yet.</p>}
+          {Boolean(projects?.length) && (
+            <div className="project-columns" aria-hidden="true">
+              <span>Name</span>
+              <span>Size</span>
+              <span>FPS</span>
+              <span>Scenes</span>
+              <span>Length</span>
+              <span>Edited</span>
+            </div>
+          )}
           <ul>
             {projects?.map((p) => (
-              <li key={p.id} className="project-card">
+              <li key={p.id} className="project-row">
                 <button className="project-open" aria-label={`Open project ${p.name}`} onClick={() => open(p.id)}>
                   <strong>{p.name}</strong>
-                  <span className="muted small">
-                    {p.width}×{p.height} · {p.fps} fps · {p.scenes} scene{p.scenes === 1 ? '' : 's'} · {p.duration.toFixed(1)} s
+                  <span>
+                    {p.width}×{p.height}
                   </span>
-                  <span className="muted small">Edited {new Date(p.updatedAt).toLocaleString()}</span>
+                  <span>{p.fps}</span>
+                  <span>{p.scenes}</span>
+                  <span>{p.duration.toFixed(1)} s</span>
+                  <span>{new Date(p.updatedAt).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}</span>
                 </button>
                 <button
                   className="icon-btn danger"
@@ -236,12 +248,13 @@ export function Home({ health, onOpen }: { health: Health | null; onOpen: (p: Pr
                     void load();
                   }}
                 >
-                  ✕
+                  <Icon name="close" />
                 </button>
               </li>
             ))}
           </ul>
         </section>
+        <NewProject health={health} templates={templates} onCreated={(p, r) => onOpen(p, r)} />
       </div>
     </div>
   );

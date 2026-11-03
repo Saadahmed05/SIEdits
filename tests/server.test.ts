@@ -6,6 +6,7 @@ import { heuristicProvider } from '../src/ai/heuristic';
 import type { Project } from '../src/project/schema';
 import { ffmpegVersion } from '../src/render/ffmpeg';
 import { createApp } from '../src/server/app';
+import { loadConfig } from '../src/server/config';
 import { RenderQueue, type RenderJob } from '../src/server/jobs';
 import { ProjectStore } from '../src/server/storage';
 import { tinyPng } from './fixtures';
@@ -28,7 +29,7 @@ const json = (method: string, body?: unknown, headers: Record<string, string> = 
 async function create(): Promise<Project> {
   const res = await app.request(
     '/api/projects',
-    json('POST', { name: 'API test', brief: 'A 4-second launch for Nova with a logo', templateId: 'product-launch', settings: { width: 320, height: 180, fps: 10 }, targetDuration: 4 }),
+    json('POST', { name: 'API test', brief: 'A 4-second launch for SIEdits with a logo', templateId: 'product-launch', settings: { width: 320, height: 180, fps: 10 }, targetDuration: 4 }),
   );
   expect(res.status).toBe(201);
   return ((await res.json()) as { project: Project }).project;
@@ -139,5 +140,105 @@ describe('HTTP API', () => {
     const res = await app.request(`/api/projects/${project.id}/renders`, { method: 'POST' });
     expect(res.status).toBe(422);
     expect(((await res.json()) as { code: string }).code).toBe('MISSING_ASSET');
+  });
+});
+
+describe('request guards', () => {
+  const projectCount = async () => ((await (await app.request('/api/projects')).json()) as { projects: unknown[] }).projects.length;
+  const blank = { templateId: 'blank', settings: { width: 320, height: 180, fps: 10 } };
+
+  it('rejects requests whose Host is not this machine (DNS rebinding)', async () => {
+    const res = await app.request('/api/projects', { headers: { host: 'evil.example' } });
+    expect(res.status).toBe(403);
+    expect(((await res.json()) as { code: string }).code).toBe('FORBIDDEN_HOST');
+    expect((await app.request('/fonts/inter/x.woff2', { headers: { host: 'evil.example:8787' } })).status).toBe(403);
+  });
+
+  it('accepts every loopback Host', async () => {
+    for (const host of ['localhost:8787', '127.0.0.1:8787', '[::1]:8787', 'LOCALHOST:5173']) {
+      expect((await app.request('/api/health', { headers: { host } })).status).toBe(200);
+    }
+  });
+
+  it('rejects cross-origin writes, including ones that skip the CORS preflight', async () => {
+    const res = await app.request('/api/projects', {
+      method: 'POST',
+      headers: { host: '127.0.0.1:8787', origin: 'https://evil.example', 'content-type': 'text/plain' },
+      body: JSON.stringify(blank),
+    });
+    expect(res.status).toBe(403);
+    expect(((await res.json()) as { code: string }).code).toBe('FORBIDDEN_ORIGIN');
+    expect(await projectCount()).toBe(0);
+  });
+
+  it('treats another local port and the opaque "null" Origin as cross-origin', async () => {
+    for (const origin of ['http://localhost:3000', 'null']) {
+      const res = await app.request('/api/projects', json('POST', blank, { host: 'localhost:8787', origin }));
+      expect(res.status).toBe(403);
+    }
+  });
+
+  it('accepts same-origin writes, directly and through the dev proxy', async () => {
+    for (const host of ['127.0.0.1:8787', 'localhost:5173']) {
+      const res = await app.request('/api/projects', json('POST', blank, { host, origin: `http://${host}` }));
+      expect(res.status).toBe(201);
+    }
+  });
+
+  it('accepts hosts the operator allows explicitly', async () => {
+    const open = createApp({ store: new ProjectStore(mkdtempSync(path.join(os.tmpdir(), 'sw-api-'))), queue, providers: [heuristicProvider], ffmpegVersion: async () => null, maxUploadBytes: 1024, allowedHosts: ['editor.lan'] });
+    expect((await open.request('/api/health', { headers: { host: 'editor.lan:8787' } })).status).toBe(200);
+    expect((await open.request('/api/health', { headers: { host: 'other.lan' } })).status).toBe(403);
+  });
+});
+
+describe('request size limits', () => {
+  const small = () =>
+    createApp({ store: new ProjectStore(mkdtempSync(path.join(os.tmpdir(), 'sw-api-'))), queue, providers: [heuristicProvider], ffmpegVersion: async () => null, maxUploadBytes: 64, maxJsonBytes: 64, maxImportBytes: 128 });
+  const padded = { padding: 'x'.repeat(200) };
+
+  it('limits project saves and generation', async () => {
+    const limited = small();
+    const res = await limited.request('/api/projects', json('POST', padded));
+    expect(res.status).toBe(413);
+    expect(((await res.json()) as { code: string }).code).toBe('BODY_TOO_LARGE');
+    expect((await limited.request('/api/projects/p1', json('PUT', padded))).status).toBe(413);
+    expect((await limited.request('/api/projects/p1/generate', json('POST', padded))).status).toBe(413);
+  });
+
+  it('limits imports separately so bundles can be larger than project saves', async () => {
+    const limited = small();
+    expect((await limited.request('/api/import', json('POST', { padding: 'x'.repeat(30) }))).status).toBe(422);
+    expect((await limited.request('/api/import', json('POST', padded))).status).toBe(413);
+  });
+
+  it('limits uploads that do not declare a length, before storing them', async () => {
+    const limited = small();
+    const body = new ReadableStream({
+      start(controller) {
+        controller.enqueue(new Uint8Array(100));
+        controller.close();
+      },
+    });
+    const res = await limited.request('/api/projects/p1/assets', { method: 'POST', body, duplex: 'half' } as RequestInit);
+    expect(res.status).toBe(413);
+  });
+});
+
+describe('asset upload headers', () => {
+  it('rejects a malformed x-filename as a client error', async () => {
+    const res = await app.request('/api/projects/p1/assets', { method: 'POST', body: new Uint8Array(await tinyPng()), headers: { 'x-filename': '%E0%A4%A' } });
+    expect(res.status).toBe(400);
+    expect(((await res.json()) as { error: string }).error).toMatch(/x-filename/);
+  });
+});
+
+describe('server config', () => {
+  it('parses allowed hosts and size limits', () => {
+    const config = loadConfig({ ALLOWED_HOSTS: ' editor.lan, Studio.Example ', MAX_JSON_MB: '2', MAX_IMPORT_MB: '3' });
+    expect(config.allowedHosts).toEqual(['editor.lan', 'studio.example']);
+    expect(config.maxJsonBytes).toBe(2 * 1024 * 1024);
+    expect(config.maxImportBytes).toBe(3 * 1024 * 1024);
+    expect(loadConfig({}).allowedHosts).toEqual([]);
   });
 });

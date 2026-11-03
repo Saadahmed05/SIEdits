@@ -8,6 +8,7 @@ import { MOOD_STYLES } from '../../storyboard/moods';
 import type { RenderJob } from '../../server/jobs';
 import { api, ApiError, type Health } from '../api';
 import { NumberField, Section, SelectField, TextField } from './fields';
+import { Icon } from './icons';
 
 type Edit = (fn: (p: Project) => Project, key?: string) => void;
 
@@ -124,7 +125,7 @@ export function AssetsPanel({ project, edit }: { project: Project; edit: Edit })
               </span>
             </span>
             <button className="icon-btn danger" aria-label={`Remove ${a.name}`} onClick={() => edit((p) => removeAsset(p, a.id))}>
-              ✕
+              <Icon name="close" />
             </button>
           </li>
         ))}
@@ -202,7 +203,7 @@ export function BriefPanel({ project, health, onRegenerated, lastReport }: { pro
           ]}
           onChange={setProvider}
         />
-        <button className="btn primary block" disabled={busy} onClick={regenerate}>
+        <button className="btn block" disabled={busy} onClick={regenerate}>
           {busy ? 'Planning…' : 'Regenerate scenes from brief'}
         </button>
         {error && <p className="error small">{error}</p>}
@@ -316,7 +317,7 @@ export function RenderPanel({ project, health, flush, issues, startSignal }: { p
           <div className="render-result" data-testid="render-result">
             <video src={latestDone.output.url} controls preload="metadata" />
             <p className="small">
-              ✓ Verified: {latestDone.output.probe.width}×{latestDone.output.probe.height}, {latestDone.output.probe.frames} frames, {latestDone.output.probe.duration.toFixed(2)} s · rendered in{' '}
+              Verified: {latestDone.output.probe.width}×{latestDone.output.probe.height}, {latestDone.output.probe.frames} frames, {latestDone.output.probe.duration.toFixed(2)} s · rendered in{' '}
               {(latestDone.output.elapsedMs / 1000).toFixed(1)} s
             </p>
             <a className="btn block" href={latestDone.output.url} download={`${project.name}.mp4`}>

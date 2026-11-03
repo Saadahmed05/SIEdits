@@ -1,7 +1,8 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig, type Plugin } from 'vite';
 
-const api = `http://127.0.0.1:${process.env.PORT ?? 8787}`;
+/** Keep the browser's Host: the API rejects requests whose Origin does not match it. */
+const api = { target: `http://127.0.0.1:${process.env.PORT ?? 8787}`, changeOrigin: false };
 
 /**
  * Cross-origin isolation enables SharedArrayBuffer, which multi-threaded WASM (onnxruntime-web

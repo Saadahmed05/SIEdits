@@ -14,110 +14,59 @@ export interface MoodStyle {
   glow: boolean;
 }
 
+/**
+ * Default looks are flat and typographic: solid backgrounds, no glow, no particles. Gradients and
+ * effects remain available to anyone who adds them on purpose, but are never the starting point.
+ * tests/style-rules.test.ts holds these defaults to that.
+ */
 export const MOOD_STYLES: Record<Mood, MoodStyle> = {
   'dark-cinematic': {
     label: 'Dark cinematic',
     brand: {
-      primary: '#7c5cff',
-      secondary: '#00d4ff',
-      accent: '#b9a8ff',
-      background: '#07080d',
-      text: '#f5f6fa',
+      primary: '#d98a3d',
+      secondary: '#8f8f93',
+      accent: '#e8d3b8',
+      background: '#0e0e0f',
+      text: '#f2f0eb',
       headingFont: 'Inter',
       bodyFont: 'Inter',
     },
-    background: {
-      type: 'radial-gradient',
-      cx: 0.5,
-      cy: 0.35,
-      stops: [
-        { offset: 0, color: '#1a1533' },
-        { offset: 0.6, color: '@background' },
-        { offset: 1, color: '@background' },
-      ],
-      vignette: 0.5,
-    },
-    emphasisBackground: {
-      type: 'radial-gradient',
-      cx: 0.5,
-      cy: 0.5,
-      stops: [
-        { offset: 0, color: '#241a4d' },
-        { offset: 0.7, color: '@background' },
-        { offset: 1, color: '@background' },
-      ],
-      vignette: 0.6,
-    },
-    particles: true,
-    glow: true,
+    background: { type: 'solid', color: '@background' },
+    emphasisBackground: { type: 'solid', color: '#171718' },
+    particles: false,
+    glow: false,
   },
   'bright-clean': {
     label: 'Bright & clean',
     brand: {
       primary: '#2f6bff',
-      secondary: '#00b894',
-      accent: '#ffb020',
-      background: '#f7f8fb',
-      text: '#0f172a',
+      secondary: '#00806a',
+      accent: '#b35c00',
+      background: '#f7f7f5',
+      text: '#141415',
       headingFont: 'Inter',
       bodyFont: 'Inter',
     },
-    background: {
-      type: 'linear-gradient',
-      angle: 120,
-      stops: [
-        { offset: 0, color: '#ffffff' },
-        { offset: 1, color: '@background' },
-      ],
-      rotateSpeed: 0,
-      vignette: 0,
-    },
-    emphasisBackground: {
-      type: 'linear-gradient',
-      angle: 135,
-      stops: [
-        { offset: 0, color: '#eef3ff' },
-        { offset: 1, color: '#ffffff' },
-      ],
-      rotateSpeed: 0,
-      vignette: 0,
-    },
+    background: { type: 'solid', color: '@background' },
+    emphasisBackground: { type: 'solid', color: '#ffffff' },
     particles: false,
     glow: false,
   },
   'bold-vibrant': {
     label: 'Bold & vibrant',
     brand: {
-      primary: '#ff3d81',
-      secondary: '#ffb300',
-      accent: '#00e5ff',
-      background: '#12002e',
+      primary: '#ff4d2e',
+      secondary: '#ffc400',
+      accent: '#f2f0eb',
+      background: '#111112',
       text: '#ffffff',
       headingFont: 'Space Grotesk',
       bodyFont: 'Inter',
     },
-    background: {
-      type: 'linear-gradient',
-      angle: 135,
-      stops: [
-        { offset: 0, color: '@background' },
-        { offset: 1, color: '#3b0a5c' },
-      ],
-      rotateSpeed: 6,
-      vignette: 0.3,
-    },
-    emphasisBackground: {
-      type: 'linear-gradient',
-      angle: 45,
-      stops: [
-        { offset: 0, color: '#3b0a5c' },
-        { offset: 1, color: '@background' },
-      ],
-      rotateSpeed: 8,
-      vignette: 0.3,
-    },
-    particles: true,
-    glow: true,
+    background: { type: 'solid', color: '@background' },
+    emphasisBackground: { type: 'solid', color: '#1c1c1d' },
+    particles: false,
+    glow: false,
   },
   'minimal-mono': {
     label: 'Minimal mono',
@@ -146,26 +95,8 @@ export const MOOD_STYLES: Record<Mood, MoodStyle> = {
       headingFont: 'Playfair Display',
       bodyFont: 'Inter',
     },
-    background: {
-      type: 'radial-gradient',
-      cx: 0.3,
-      cy: 0.3,
-      stops: [
-        { offset: 0, color: '#2e221a' },
-        { offset: 1, color: '@background' },
-      ],
-      vignette: 0.4,
-    },
-    emphasisBackground: {
-      type: 'radial-gradient',
-      cx: 0.5,
-      cy: 0.5,
-      stops: [
-        { offset: 0, color: '#3a2a1e' },
-        { offset: 1, color: '@background' },
-      ],
-      vignette: 0.5,
-    },
+    background: { type: 'solid', color: '@background' },
+    emphasisBackground: { type: 'solid', color: '#241b15' },
     particles: false,
     glow: false,
   },

@@ -20,7 +20,7 @@ The format is designed so that:
   "format": "scenewright.project",   // required, fixed
   "version": 1,                      // required; newer versions are refused with a clear error
   "id": "proj_7sm1t3gpqv",           // [A-Za-z0-9_-]{1,64}
-  "name": "Nova launch",
+  "name": "SIEdits launch",
   "createdAt": "2026-10-22T00:00:00.000Z",
   "updatedAt": "2026-10-22T00:00:00.000Z",
   "settings": { "width": 1920, "height": 1080, "fps": 30 },
@@ -148,15 +148,15 @@ Bundles can be imported in the editor or rendered directly with
 
 ## Worked example
 
-[`examples/nova-launch.project.json`](../examples/nova-launch.project.json) was produced by
-the offline planner from the brief _"Create a 12-second cinematic launch animation for a
-fictional SaaS product called Nova…"_ and is interpreted as follows:
+[`examples/siedits-launch.project.json`](../examples/siedits-launch.project.json) was produced by
+the offline planner from the brief _"Create a 12-second cinematic launch animation for an
+open-source AI video editor called SIEdits…"_ and is interpreted as follows:
 
 | Time | Scene | What you see |
 |---|---|---|
-| 0.0–3.9 s | `1. Title` | Particles fade in; "Meet Nova" tracks in with a `@primary` glow; an accent line scales in; the subheadline slides up. All exit with an end-anchored fade. |
+| 0.0–3.9 s | `1. Title` | "Meet SIEdits" tracks in over a solid background; an accent line scales in; the subheadline slides up. All exit with an end-anchored fade. |
 | 3.3–8.7 s | `2. Product reveal` | Enters with a 0.6 s `zoom` transition. A browser-framed screenshot (placeholder UI until you upload one) slides up and slowly zooms; the headline slides in from the left. |
-| 8.1–12.0 s | `3. Logo reveal` | Enters with a 0.6 s `fade`. A ring expands and dissolves; the generated "N" monogram + "Nova" wordmark pops in with `ease-out-back`. |
+| 8.1–12.0 s | `3. Logo reveal` | Enters with a 0.6 s `fade`. A ring expands and dissolves; the generated "S" monogram + "SIEdits" wordmark pops in with `ease-out-back`. |
 
 Total: 3.9 + 5.4 + 3.9 − 0.6 − 0.6 = **12.0 s**, 360 frames at 30 fps.
 

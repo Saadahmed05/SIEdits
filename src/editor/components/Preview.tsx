@@ -3,6 +3,7 @@
  * scrubbing, click-to-select and drag-to-move for elements of the scene under the playhead.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { pickElement } from '../../engine/hit-test';
 import { renderFrame } from '../../engine/render';
 import { sceneIndexAt, sceneSpans, totalDuration } from '../../engine/timeline';
 import type { AssetResolver, ElementBox } from '../../engine/types';
@@ -67,10 +68,11 @@ export function Preview(props: PreviewProps) {
       if (box && !playing) {
         ctx.save();
         ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-        ctx.strokeStyle = '#4da3ff';
+        ctx.translate(box.anchorX, box.anchorY);
+        ctx.rotate((box.rotation * Math.PI) / 180);
+        ctx.strokeStyle = '#d98a3d';
         ctx.lineWidth = 1.5 / pixelRatio;
-        ctx.setLineDash([6 / pixelRatio, 4 / pixelRatio]);
-        ctx.strokeRect(box.x, box.y, box.width, box.height);
+        ctx.strokeRect(box.x - box.anchorX, box.y - box.anchorY, box.width, box.height);
         ctx.restore();
       }
     },
@@ -114,9 +116,7 @@ export function Preview(props: PreviewProps) {
   const onPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (playing) onPlayingChange(false);
     const p = toProject(e);
-    const hits = boxesRef.current.filter((b) => p.x >= b.x && p.x <= b.x + b.width && p.y >= b.y && p.y <= b.y + b.height);
-    // Prefer the smallest box (topmost small element over full-frame particles).
-    const hit = hits.sort((a, b) => a.width * a.height - b.width * b.height)[0];
+    const hit = pickElement(boxesRef.current, p.x, p.y);
     const sceneId = project.scenes[sceneIndexAt(sceneSpans(project.scenes), time)]?.id;
     if (!hit) {
       if (sceneId) props.onSelect(sceneId, null);

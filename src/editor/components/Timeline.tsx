@@ -2,6 +2,7 @@
 import { useMemo, useRef } from 'react';
 import { sceneSpans, totalDuration } from '../../engine/timeline';
 import type { Project } from '../../project/schema';
+import { Icon } from './icons';
 import { formatTime } from './Preview';
 
 interface Props {
@@ -29,10 +30,10 @@ export function Timeline({ project, time, playing, selectedSceneId, onSeek, onTo
     <div className="timeline">
       <div className="transport">
         <button className="icon-btn" onClick={() => onSeek(0)} aria-label="Go to start" title="Go to start">
-          ⏮
+          <Icon name="start" />
         </button>
-        <button className="play-btn" onClick={onTogglePlay} aria-label={playing ? 'Pause' : 'Play'} title="Play/Pause (Space)">
-          {playing ? '❚❚' : '▶'}
+        <button className="icon-btn" onClick={onTogglePlay} aria-label={playing ? 'Pause' : 'Play'} title="Play/Pause (Space)">
+          <Icon name={playing ? 'pause' : 'play'} />
         </button>
         <span className="timecode" data-testid="timecode">
           {formatTime(time)} <span className="muted">/ {formatTime(duration)}</span>

@@ -27,6 +27,9 @@ const app = createApp({
   providers,
   ffmpegVersion: () => ffmpegVersion(),
   maxUploadBytes: config.maxUploadBytes,
+  maxJsonBytes: config.maxJsonBytes,
+  maxImportBytes: config.maxImportBytes,
+  allowedHosts: config.allowedHosts,
   staticDir: config.staticDir,
 });
 

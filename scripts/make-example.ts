@@ -1,5 +1,5 @@
 /**
- * Regenerates examples/nova-launch.project.json with the deterministic planner.
+ * Regenerates examples/siedits-launch.project.json with the deterministic planner.
  *   npx tsx scripts/make-example.ts
  */
 import { writeFile } from 'node:fs/promises';
@@ -13,9 +13,9 @@ const { project, report } = await generateProject(
     templateId: 'product-launch',
     settings: { width: 1920, height: 1080, fps: 30 },
     targetDuration: 12,
-    name: 'Nova launch',
+    name: 'SIEdits launch',
   },
-  { providers: [heuristicProvider], newId: () => 'nova-launch', now: () => '2026-10-22T00:00:00.000Z' },
+  { providers: [heuristicProvider], newId: () => 'siedits-launch', now: () => '2026-10-22T00:00:00.000Z' },
 );
-await writeFile('examples/nova-launch.project.json', `${JSON.stringify(project, null, 2)}\n`);
+await writeFile('examples/siedits-launch.project.json', `${JSON.stringify(project, null, 2)}\n`);
 console.log(JSON.stringify(report, null, 2));

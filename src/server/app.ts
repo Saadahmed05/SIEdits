@@ -6,6 +6,7 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { serveStatic } from '@hono/node-server/serve-static';
 import { Hono, type Context } from 'hono';
+import { bodyLimit } from 'hono/body-limit';
 import { z } from 'zod';
 import { generateProject, type GenerateDeps } from '../ai/generate';
 import type { PlannerProvider } from '../ai/types';
@@ -18,6 +19,8 @@ import { MOOD_STYLES } from '../storyboard/moods';
 import { TEMPLATES } from '../storyboard/templates';
 import { RenderError } from '../render/errors';
 import { fontFilePath } from '../render/node-env';
+import { DEFAULT_MAX_IMPORT_BYTES, DEFAULT_MAX_JSON_BYTES } from './config';
+import { requestGuard } from './guards';
 import type { RenderQueue } from './jobs';
 import { ProjectStore, StorageError, writeBundleAssets } from './storage';
 
@@ -27,6 +30,12 @@ export interface AppDeps {
   providers: PlannerProvider[];
   ffmpegVersion: () => Promise<string | null>;
   maxUploadBytes: number;
+  /** Largest project save or generate request. */
+  maxJsonBytes?: number;
+  /** Largest import; bundles embed their assets, so this is much larger than maxJsonBytes. */
+  maxImportBytes?: number;
+  /** Host names to serve besides loopback, for deployments that are not on localhost. */
+  allowedHosts?: readonly string[];
   staticDir?: string | null;
   /** Override for tests. */
   generateDeps?: Partial<GenerateDeps>;
@@ -58,10 +67,19 @@ async function jsonBody(c: Context): Promise<unknown> {
   return JSON.parse(text);
 }
 
+/** Enforced while reading, so an upload that declares no length cannot fill memory. */
+const limitBody = (maxSize: number) =>
+  bodyLimit({
+    maxSize,
+    onError: (c) => c.json({ error: `request body is larger than ${maxSize} bytes`, code: 'BODY_TOO_LARGE' }, 413),
+  });
+
 export function createApp(deps: AppDeps): Hono {
   const { store, queue } = deps;
   const app = new Hono();
   app.onError((err, c) => errorResponse(c, err));
+  app.use('*', requestGuard(deps.allowedHosts));
+  const limitJson = limitBody(deps.maxJsonBytes ?? DEFAULT_MAX_JSON_BYTES);
 
   const generateDeps = (): GenerateDeps => ({
     providers: deps.providers,
@@ -88,7 +106,7 @@ export function createApp(deps: AppDeps): Hono {
   // ---- Projects ---------------------------------------------------------------------------
   app.get('/api/projects', async (c) => c.json({ projects: await store.list() }));
 
-  app.post('/api/projects', async (c) => {
+  app.post('/api/projects', limitJson, async (c) => {
     const body = GenerateBody.parse(await jsonBody(c));
     const { project, report } = await generateProject(body, generateDeps());
     const saved = await store.save(project, { touch: false });
@@ -97,7 +115,7 @@ export function createApp(deps: AppDeps): Hono {
 
   app.get('/api/projects/:id', async (c) => c.json({ project: await store.get(c.req.param('id')) }));
 
-  app.put('/api/projects/:id', async (c) => {
+  app.put('/api/projects/:id', limitJson, async (c) => {
     const body = await jsonBody(c);
     const id = c.req.param('id');
     if ((body as { id?: unknown })?.id !== id) return c.json({ error: 'project id in body does not match URL' }, 400);
@@ -110,7 +128,7 @@ export function createApp(deps: AppDeps): Hono {
   });
 
   /** Re-plan an existing project from a new brief. Keeps id, name, assets; replaces scenes and brand. */
-  app.post('/api/projects/:id/generate', async (c) => {
+  app.post('/api/projects/:id/generate', limitJson, async (c) => {
     const current = await store.get(c.req.param('id'));
     const body = GenerateBody.parse({ settings: current.settings, ...(await jsonBody(c) as object) });
     const { project, report } = await generateProject(body, generateDeps());
@@ -131,7 +149,7 @@ export function createApp(deps: AppDeps): Hono {
   });
 
   /** Accepts a bundle (with assets) or a plain project file. Always creates a new project id. */
-  app.post('/api/import', async (c) => {
+  app.post('/api/import', limitBody(deps.maxImportBytes ?? DEFAULT_MAX_IMPORT_BYTES), async (c) => {
     const body = await jsonBody(c);
     const id = newId('proj');
     const now = new Date().toISOString();
@@ -149,13 +167,15 @@ export function createApp(deps: AppDeps): Hono {
   });
 
   // ---- Assets -------------------------------------------------------------------------------
-  app.post('/api/projects/:id/assets', async (c) => {
-    const len = Number(c.req.header('content-length') ?? 0);
-    if (len > deps.maxUploadBytes) return c.json({ error: `file is larger than ${deps.maxUploadBytes} bytes` }, 413);
+  app.post('/api/projects/:id/assets', limitBody(deps.maxUploadBytes), async (c) => {
     const data = new Uint8Array(await c.req.arrayBuffer());
-    if (data.byteLength > deps.maxUploadBytes) return c.json({ error: `file is larger than ${deps.maxUploadBytes} bytes` }, 413);
     if (data.byteLength === 0) return c.json({ error: 'empty upload' }, 400);
-    const name = decodeURIComponent(c.req.header('x-filename') ?? 'image');
+    let name: string;
+    try {
+      name = decodeURIComponent(c.req.header('x-filename') ?? 'image');
+    } catch {
+      return c.json({ error: 'x-filename header is not valid percent-encoding' }, 400);
+    }
     return c.json({ asset: await store.addAsset(c.req.param('id'), name, data) }, 201);
   });
 

@@ -16,11 +16,11 @@ export default defineConfig({
     screenshot: 'only-on-failure',
   },
   webServer: {
-    command: `rm -rf .tmp/e2e-data && npm run build && NODE_ENV=production DATA_DIR=.tmp/e2e-data PORT=${PORT} npx tsx src/server/index.ts`,
+    command: 'node scripts/e2e-server.mjs',
     url: `http://127.0.0.1:${PORT}/api/health`,
     timeout: 120_000,
     reuseExistingServer: false,
     // AI keys are deliberately cleared: the core workflow must work without them.
-    env: { ANTHROPIC_API_KEY: '', OPENAI_BASE_URL: '', OPENAI_MODEL: '' },
+    env: { PORT: String(PORT), ANTHROPIC_API_KEY: '', OPENAI_BASE_URL: '', OPENAI_MODEL: '' },
   },
 });

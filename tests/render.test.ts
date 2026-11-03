@@ -7,6 +7,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { renderFrame } from '../src/engine/render';
 import type { Ctx2D } from '../src/engine/types';
 import { RenderError } from '../src/render/errors';
+import { ffmpegPath } from '../src/render/ffmpeg';
 import { createNodeEnv, mapAssetResolver, registerFonts } from '../src/render/node-env';
 import { renderVideo, validateForRender } from '../src/render/render-video';
 import { exampleProjectJson, smallProject, smallProjectInput, tinyPng } from './fixtures';
@@ -14,7 +15,7 @@ import { exampleProjectJson, smallProject, smallProjectInput, tinyPng } from './
 const tmp = () => mkdtempSync(path.join(os.tmpdir(), 'sw-render-'));
 
 function framePixel(file: string, at: number, x: number, y: number): [number, number, number] {
-  const raw = execFileSync('ffmpeg', ['-v', 'error', '-ss', String(at), '-i', file, '-frames:v', '1', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-']);
+  const raw = execFileSync(ffmpegPath(), ['-v', 'error', '-ss', String(at), '-i', file, '-frames:v', '1', '-f', 'rawvideo', '-pix_fmt', 'rgb24', '-']);
   const i = (y * 160 + x) * 3;
   return [raw[i]!, raw[i + 1]!, raw[i + 2]!];
 }
@@ -64,9 +65,9 @@ describe('renderFrame (engine on Skia)', () => {
   it('renders text with the bundled fonts (different weights measure differently)', () => {
     const ctx = createCanvas(10, 10).getContext('2d');
     ctx.font = '400 40px "Inter"';
-    const regular = ctx.measureText('Nova launch').width;
+    const regular = ctx.measureText('SIEdits launch').width;
     ctx.font = '800 40px "Inter"';
-    const heavy = ctx.measureText('Nova launch').width;
+    const heavy = ctx.measureText('SIEdits launch').width;
     expect(heavy).toBeGreaterThan(regular);
   });
 });
@@ -94,7 +95,7 @@ describe('renderVideo', () => {
     const example = exampleProjectJson() as ReturnType<typeof smallProjectInput>;
     example.settings = { width: 320, height: 180, fps: 10 };
     const dir = tmp();
-    const result = await renderVideo(example, { assetsDir: dir, output: path.join(dir, 'nova.mp4') });
+    const result = await renderVideo(example, { assetsDir: dir, output: path.join(dir, 'siedits.mp4') });
     expect(result.probe.frames).toBe(120);
     expect(result.probe.duration).toBeCloseTo(12, 1);
   });

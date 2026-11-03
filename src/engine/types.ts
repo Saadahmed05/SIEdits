@@ -33,7 +33,10 @@ export interface RenderEnv {
   showMissingAssets?: boolean;
 }
 
-/** Axis-aligned box of a drawn element in project pixels, used for hit testing in the editor. */
+/**
+ * Box of a drawn element in project pixels, used for hit testing in the editor. x/y/width/height
+ * describe it before rotation; it is then rotated by `rotation` degrees around the anchor.
+ */
 export interface ElementBox {
   sceneId: string;
   elementId: string;
@@ -41,4 +44,7 @@ export interface ElementBox {
   y: number;
   width: number;
   height: number;
+  anchorX: number;
+  anchorY: number;
+  rotation: number;
 }

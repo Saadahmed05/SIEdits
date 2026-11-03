@@ -84,7 +84,7 @@ export function extractDuration(brief: string): number | null {
 }
 
 export function extractProductName(brief: string): string | null {
-  // A name is 1-3 words; dots are allowed only inside a word (e.g. "Nova.ai"), never before a space.
+  // A name is 1-3 words; dots are allowed only inside a word (e.g. "SIEdits.ai"), never before a space.
   const word = "[A-Za-z0-9](?:[\\w&'’-]|\\.(?=\\w))*";
   const capWord = "[A-Z](?:[\\w&'’-]|\\.(?=\\w))*";
   const name = `(${word}(?:[ \\t]+${capWord}){0,2})`;

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Icon } from './icons';
 import {
   addElement,
   createAnimation,
@@ -161,15 +162,15 @@ export function SceneInspector({ project, scene, index, edit, selectedElementId,
           {[...scene.elements].reverse().map((el) => (
             <li key={el.id} className={el.id === selectedElementId ? 'selected' : ''}>
               <button className="layer-name" aria-label={`Select layer ${elementLabel(el)}`} onClick={() => onSelectElement(el.id)}>
-                <span className={`badge badge-${el.type}`}>{ELEMENT_LABELS[el.type]}</span>
+                <span className="badge">{ELEMENT_LABELS[el.type]}</span>
                 {elementLabel(el)}
               </button>
               <span className="layer-actions">
                 <button className="icon-btn" aria-label="Bring forward" title="Bring forward" onClick={() => edit((p) => moveElement(p, scene.id, el.id, 1))}>
-                  ↑
+                  <Icon name="up" />
                 </button>
                 <button className="icon-btn" aria-label="Send backward" title="Send backward" onClick={() => edit((p) => moveElement(p, scene.id, el.id, -1))}>
-                  ↓
+                  <Icon name="down" />
                 </button>
                 <button
                   className="icon-btn danger"
@@ -180,7 +181,7 @@ export function SceneInspector({ project, scene, index, edit, selectedElementId,
                     if (el.id === selectedElementId) onSelectElement(null);
                   }}
                 >
-                  ✕
+                  <Icon name="close" />
                 </button>
               </span>
             </li>
@@ -328,7 +329,7 @@ function AnimationEditor({ anim, onChange, onRemove, textOnlyAllowed }: { anim: 
           ))}
         </select>
         <button className="icon-btn danger" aria-label={`Remove ${anim.type} animation`} onClick={onRemove}>
-          ✕
+          <Icon name="close" />
         </button>
       </div>
       {fields}
